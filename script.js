@@ -14,6 +14,15 @@ function resizeCanvas() {
 	// Calculate the new aspect ratio
 	var aspectRatio = canvas.width / canvas.height;
 
+	// Set the viewport to cover the entire canvas, but make sure the aspect ratio is preserved
+	if (canvas.width > canvas.height) {
+		var newWidth = canvas.height * aspectRatio;
+		gl.viewport((canvas.width - newWidth) / 2, 0, newWidth, canvas.height);
+	} else {
+		var newHeight = canvas.width / aspectRatio;
+		gl.viewport(0, (canvas.height - newHeight) / 2, canvas.width, newHeight);
+	}
+
 	// Redraw the circle with the updated aspect ratio
 	drawCircle(aspectRatio);
 }

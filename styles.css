@@ -4,34 +4,25 @@ body {
     background-color: black;
     color: rgb(255, 127, 157);
     text-align: center;
+    align-items: center;
+    align-self: center;
+    align-content: center;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100vh;
     width: 100vw;
     margin: 0;
-    padding: 0;
+    padding: 0 5rem;
     font-family: 'Rajdhani', sans-serif;
     overflow: hidden;
-}
-
-.title-div {
-    color: rgb(255, 127, 157);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-}
-
-.title-div a {
-    text-decoration: none;
-    color: rgb(255, 127, 157);
-    font-size: 1.5rem;
 }
 
 .simulator-body{
     color: rgb(255, 127, 157);
     text-align: center;
     display: flex;
-    height: 95%;
+    height: 95vh;
+    width: 95vh;
     flex-direction: row;
     padding: 1rem;
 }
@@ -49,15 +40,46 @@ body {
 .control-div{
     display: flex;
     flex-direction: column;
-    height: auto;
-    width: 20%;
-    padding: 0rem 1rem;
+    align-items: center;
+    height: 95vh;
+    width: 50vh;
+    padding: 0rem 2rem;
+    border: 1px solid rgb(255, 127, 157);
+    border-radius: 5px;
+}
+
+
+.title-div {
+    color: rgb(255, 127, 157);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.title-div a {
+    text-decoration: none;
+    color: rgb(255, 127, 157);
+    font-size: 1.5rem;
 }
 
 .control{
     display: flex;
     flex-direction: column;
-    background-color: rgb(87, 67, 67);
+    align-items: center;
+    /* background-color: rgb(87, 67, 67); */
     height: 100%;
     width: 100%;
+    padding: 1rem;
+}
+
+button{
+    background-color: rgb(255, 127, 157);
+    color: black;
+    border-radius: 5px;
+    border: 1px solid rgb(255, 127, 157);
+    height: 2rem;
+    width: 30%;
+    margin: 1rem;
+    font-size: 0.9rem;
 }
