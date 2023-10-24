@@ -2,24 +2,26 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <!-- include styles.css -->
+        <meta meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <link rel="stylesheet" href="styles.css">
         <title>Fluid Simulation</title>
     </head>
 
-    <body>
+    <body onload="init_sim();">
         <div class="title-div">
             <a href="https://github.com/carpit680/fluid-simulation">carpit680/fluid-simulation</a>
         </div>
 
         <div class="simulator-body">
-            <div class="simulator">
+            <canvas class="simulator">
+                Your browser does not support the HTML5
+            </canvas>
         </div>
 
         <div class="control-div">
             <div class="control">
             </div>
         </div>
+        <script src="script.js"></script>
     </body>
 </html>

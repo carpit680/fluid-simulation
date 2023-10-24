@@ -11,6 +11,7 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Rajdhani', sans-serif;
+    overflow: hidden;
 }
 
 .title-div {
@@ -23,7 +24,7 @@ body {
 .title-div a {
     text-decoration: none;
     color: rgb(255, 127, 157);
-    font-size: large;
+    font-size: 1.5rem;
 }
 
 .simulator-body{
@@ -42,6 +43,7 @@ body {
     width: 80%;
     background-color: black;
     border: 1px solid rgb(255, 127, 157);
+    border-radius: 5px;
 }
 
 .control-div{
