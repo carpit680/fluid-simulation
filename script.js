@@ -1,10 +1,36 @@
 /** @format */
 
+// Reset animation on reset button click
+document.getElementById("reset").addEventListener("click", () => {
+	window.location.reload();
+});
+
+// Pause animation on pause button click
+var isPaused = false;
+
+// Function to toggle the animation state
+function toggleAnimationState() {
+    isPaused = !isPaused;
+    if (!isPaused) {
+        // Resume the animation
+		requestAnimationFrame(drawCircle);
+		document.getElementById("pause").innerHTML = "Pause";
+	}
+	else
+		document.getElementById("pause").innerHTML = "Resume";
+}
+
 var canvas = document.querySelector(".simulator");
 var gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
 if (!gl) {
 	alert("Your browser does not support WebGL");
 }
+
+// Declare variables for position, velocity, and other settings
+var circleX = 0;
+var circleY = 0;
+var velocityY = 0.03; // Initial velocity in the Y direction
+var gravity = -0.001; // The gravitational force (you can adjust this value)
 
 // Function to update the canvas size and redraw the circle
 function resizeCanvas() {
@@ -29,8 +55,12 @@ function resizeCanvas() {
 
 // Function to draw the circle
 function drawCircle(aspectRatio) {
+	if (isPaused) {
+		// If animation is paused, do not continue the animation loop
+		return;
+	}
 	gl.viewport(0, 0, canvas.width, canvas.height);
-
+	var canvasHeight = canvas.height;
 	var radius = 0.1 * Math.min(1, aspectRatio);
 
 	// Define the vertices for the circle
@@ -38,11 +68,32 @@ function drawCircle(aspectRatio) {
 	var numSegments = 100;
 	var centerX = 0.0;
 	var centerY = 0.0;
+	// Update the velocity by applying gravity
+	velocityY += gravity;
 
+	console.log(circleY, canvasHeight);
+	// Check if the circle is going out of bounds and adjust its position
+	if (-1 * circleY * canvasHeight > canvasHeight/2 - radius) {
+		// If it goes beyond the bottom boundary, reverse the velocity
+		circleY = canvasHeight - radius;
+		velocityY = -velocityY;
+	}
+	// Update the Y coordinate to create a downward movement
+	circleY += velocityY;
+
+	// Get the canvas dimensions
+	var canvasWidth = canvas.width;
+	var canvasHeight = canvas.height;
+
+
+	gl.viewport(0, 0, canvasWidth, canvasHeight);
+
+	// Set the circle's position in the vertex data
+	vertices = [];
 	for (var i = 0; i <= numSegments; i++) {
 		var theta = (i / numSegments) * Math.PI * 2;
 		var x = centerX + radius * Math.cos(theta);
-		var y = centerY + radius * Math.sin(theta);
+		var y = centerY + radius * Math.sin(theta) + circleY; // Include circleY in the Y coordinate
 		vertices.push(x, y);
 	}
 
@@ -88,10 +139,21 @@ function drawCircle(aspectRatio) {
 
 	// Draw the circle
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, numSegments + 1);
+
+	requestAnimationFrame(drawCircle);
 }
 
 // Initial setup and drawing
 resizeCanvas();
 
+// Start the animation loop
+requestAnimationFrame(drawCircle);
+
 // Listen for window resize events and update the canvas
 window.addEventListener("resize", resizeCanvas);
+
+// Get a reference to the "pause" button element in your HTML
+var pauseButton = document.querySelector("#pause");
+
+// Add a click event listener to the "pause" button
+pauseButton.addEventListener("click", toggleAnimationState);
