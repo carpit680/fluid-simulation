@@ -30,7 +30,8 @@ if (!gl) {
 var circleX = 0;
 var circleY = 0;
 var velocityY = 0.03; // Initial velocity in the Y direction
-var gravity = -0.001; // The gravitational force (you can adjust this value)
+var velocityX = 0.02; // Initial velocity in the Y direction
+var gravity = -0.005; // The gravitational force (you can adjust this value)
 
 // Function to update the canvas size and redraw the circle
 function resizeCanvas() {
@@ -72,14 +73,19 @@ function drawCircle(aspectRatio) {
 	velocityY += gravity;
 
 	console.log(circleY, canvasHeight);
-	// Check if the circle is going out of bounds and adjust its position
-	if (-1 * circleY * canvasHeight > canvasHeight/2 - radius) {
-		// If it goes beyond the bottom boundary, reverse the velocity
-		circleY = canvasHeight - radius;
-		velocityY = -velocityY;
-	}
+	// Check if the circle is going out of bounds and adjust its velocity
+	if (circleY > 1 - radius)
+		velocityY = -Math.abs(Math.sin(velocityY)) * 0.6;
+	if (circleY < -1 + radius)
+		velocityY = Math.abs(Math.sin(velocityY)) * 0.6;
+	if (circleX > 1 - radius)
+		velocityX = -Math.abs(Math.sin(velocityX)) * 0.6;
+	if (circleX < - 1 + radius)
+		velocityX = Math.abs(Math.sin(velocityX)) * 0.6;
+
 	// Update the Y coordinate to create a downward movement
 	circleY += velocityY;
+	circleX += velocityX;
 
 	// Get the canvas dimensions
 	var canvasWidth = canvas.width;
@@ -92,7 +98,7 @@ function drawCircle(aspectRatio) {
 	vertices = [];
 	for (var i = 0; i <= numSegments; i++) {
 		var theta = (i / numSegments) * Math.PI * 2;
-		var x = centerX + radius * Math.cos(theta);
+		var x = centerX + radius * Math.cos(theta) + circleX;
 		var y = centerY + radius * Math.sin(theta) + circleY; // Include circleY in the Y coordinate
 		vertices.push(x, y);
 	}
