@@ -62,7 +62,7 @@ function drawCircle(aspectRatio) {
 	}
 	gl.viewport(0, 0, canvas.width, canvas.height);
 	var canvasHeight = canvas.height;
-	var radius = 0.1 * Math.min(1, aspectRatio);
+	var radius = 0.03 * Math.min(1, aspectRatio);
 
 	// Define the vertices for the circle
 	var vertices = [];
@@ -74,14 +74,28 @@ function drawCircle(aspectRatio) {
 
 	console.log(circleY, canvasHeight);
 	// Check if the circle is going out of bounds and adjust its velocity
-	if (circleY > 1 - radius)
-		velocityY = -Math.abs(Math.sin(velocityY)) * 0.6;
-	if (circleY < -1 + radius)
-		velocityY = Math.abs(Math.sin(velocityY)) * 0.6;
-	if (circleX > 1 - radius)
-		velocityX = -Math.abs(Math.sin(velocityX)) * 0.6;
-	if (circleX < - 1 + radius)
-		velocityX = Math.abs(Math.sin(velocityX)) * 0.6;
+	if (circleY > 1 - radius) {
+		circleY = 1 - radius;
+		velocityY = 0;
+		velocityX = velocityX * 0.5;
+	}
+	if (circleY < -1 + radius) {
+		circleY = -1 + radius;
+		velocityY = 0;
+		velocityX = velocityX * 0.5;
+	}
+	if (circleX > 1 - radius) {
+		circleX = 1 - radius;
+		velocityX = 0;
+		velocityY = velocityY * 0.1;
+
+	}
+	if (circleX < -1 + radius) {
+		circleX = -1 + radius;
+		velocityX = 0; 
+		velocityY = velocityY * 0.1;
+
+	}
 
 	// Update the Y coordinate to create a downward movement
 	circleY += velocityY;
