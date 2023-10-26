@@ -35,10 +35,25 @@ var particle = {
 };
 var grid_size = 5; // Square root of total number of particles
 var numSegments = 50; // The number of segments (Particle mesh quality)
-var gravity = -0.004; // The gravitational force 
+var gravity = 0;  //-0.004; // The gravitational force 
 var surface_adhesion = 0.025; // Times the velocity of the particle when it is in contact with the surface(Ideally 0 IG)
 var canvas_limit = 1; // The limit of the canvas width and height +/- this value
 
+var particles = [];
+
+// Function to initialize the grid
+function initializeGrid() {
+	// var spacingY = 2.0 / grid_size;
+	// var spacingX = 2.0 / grid_size;
+
+	// for (var i = 0; i < grid_size; i++) {
+	// 	for (var j = 0; j < grid_size; j++) {
+	// 		var x = -i * 1/spacingX;
+	// 		var y = j * 1/spacingY;
+			particles.push({ x: 0, y: 0, velocityX: 0.02, velocityY: 0.03 });
+	// 	}
+	// }
+}
 // Function to update the canvas size and redraw the circle
 function resizeCanvas() {
 	canvas.width = window.innerWidth;
@@ -56,24 +71,31 @@ function resizeCanvas() {
 		gl.viewport(0, (canvas.height - newHeight) / 2, canvas.width, newHeight);
 	}
 
-	// Redraw the circle with the updated aspect ratio
-	drawCircle(aspectRatio);
+	// Redraw the grid with the updated aspect ratio
+	drawGrid(aspectRatio);
 }
 
-// Function to draw the circle
-function drawCircle(aspectRatio) {
-	if (isPaused) {
-		// If animation is paused, do not continue the animation loop
-		return;
-	}
-	gl.viewport(0, 0, canvas.width, canvas.height);
-	var canvasHeight = canvas.height;
-	var radius = 0.1 * Math.min(1, aspectRatio) / grid_size;
+// Function to draw the grid
+function drawGrid(aspectRatio) {
+    if (isPaused) {
+        // If animation is paused, do not continue the animation loop
+        return;
+    }
+    gl.viewport(0, 0, canvas.width, canvas.height);
+	var radius = (0.1 * Math.min(1, aspectRatio)) / grid_size;
 
-	// Define the vertices for the circle
-	var vertices = [];
-	var centerX = 0.0;
-	var centerY = 0.0;
+    for (var i = 0; i < particles.length; i++) {
+        var particle = particles[i];
+        updateParticlePosition(particle, radius);
+        drawCircle(particle.x, particle.y, radius);
+    }
+
+    requestAnimationFrame(drawGrid);
+}
+
+// Function to update particle position
+function updateParticlePosition(particle, radius) {
+
 	// Update the velocity by applying gravity
 	particle.vel_y += gravity;
 
@@ -82,8 +104,7 @@ function drawCircle(aspectRatio) {
 		particle.y = canvas_limit - radius;
 		particle.vel_y = 0;
 		particle.vel_x = particle.vel_x * surface_adhesion;
-	}
-	else if (particle.y <= -canvas_limit + radius) {
+	} else if (particle.y <= -canvas_limit + radius) {
 		particle.y = -canvas_limit + radius;
 		particle.vel_y = 0;
 		particle.vel_x = particle.vel_x * surface_adhesion;
@@ -92,8 +113,7 @@ function drawCircle(aspectRatio) {
 		particle.x = canvas_limit - radius;
 		particle.vel_x = 0;
 		particle.vel_y = particle.vel_y * surface_adhesion;
-	}
-	else if (particle.x <= -canvas_limit + radius) {
+	} else if (particle.x <= -canvas_limit + radius) {
 		particle.x = -canvas_limit + radius;
 		particle.vel_x = 0;
 		particle.vel_y = particle.vel_y * surface_adhesion;
@@ -102,6 +122,13 @@ function drawCircle(aspectRatio) {
 	// Update the Y coordinate to create a downward movement
 	particle.y += particle.vel_y;
 	particle.x += particle.vel_x;
+}
+// Function to draw the circle
+function drawCircle(particle_x, particle_y, radius) {
+	// Define the vertices for the circle
+	var vertices = [];
+	var centerX = 0.0;
+	var centerY = 0.0;
 
 	// Get the canvas dimensions
 	var canvasWidth = canvas.width;
@@ -114,8 +141,8 @@ function drawCircle(aspectRatio) {
 	vertices = [];
 	for (var i = 0; i <= numSegments; i++) {
 		var theta = (i / numSegments) * Math.PI * 2;
-		var x = centerX + radius * Math.cos(theta) + particle.x;
-		var y = centerY + radius * Math.sin(theta) + particle.y;
+		var x = centerX + radius * Math.cos(theta) + particle_x;
+		var y = centerY + radius * Math.sin(theta) + particle_y;
 		vertices.push(x, y);
 	}
 
@@ -162,10 +189,10 @@ function drawCircle(aspectRatio) {
 	// Draw the circle
 	gl.drawArrays(gl.TRIANGLE_FAN, 0, numSegments + 1);
 
-	requestAnimationFrame(drawCircle);
 }
 
 // Initial setup and drawing
+initializeGrid();
 resizeCanvas();
 
 // Start the animation loop
